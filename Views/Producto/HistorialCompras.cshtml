@@ -1,0 +1,38 @@
+﻿
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">📜 Historial de Compras</h2>
+        <a href="/Home/Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al Inicio
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 p-4">
+        <table class="table table-hover">
+        </table>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 p-4">
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID Pedido</th>
+                <th>Usuario</th>
+                <th>Fecha</th>
+                <th class="text-end">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pedido in Model)
+            {
+                <tr>
+                    <td>@pedido.Id</td>
+                    <td>@(pedido.Usuario != null ? pedido.Usuario.Nombre : "Sin usuario")</td>
+                    <td>@pedido.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="text-end fw-bold">$ @pedido.Total.ToString("N0")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,70 @@
+﻿@model List<TiendavirtualArepasSafaera.Models.Producto>
+@using Microsoft.AspNetCore.Http
+
+<div class="container mt-4">
+    
+        <div class="mb-3">
+        <a class="btn btn-outline-secondary" href="/Home/Index">← Volver al Inicio</a>
+        </div>
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">@TempData["Mensaje"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <h2 class="mb-4 text-center">Productos</h2>
+
+    <div class="mb-3">
+        @* Validacion: Solo Admin puede crear nuevos productos *@
+        @if (Context.Session.GetString("Rol") == "Administrador")
+        {
+            <a class="btn btn-success me-2" href="/Producto/Create">+ Nuevo Producto</a>
+        }
+        <a class="btn btn-primary" href="/Producto/Carrito">Ver Carrito</a>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow">
+                    <img src="@item.ImagenUrl" class="card-img-top" style="height:200px; object-fit:cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Nombre</h5>
+                        <p class="card-text">
+                            Precio: $@item.Precio <br />
+                            Stock: @item.Stock <br />
+                            Categoría: @item.Categoria?.Nombre
+                        </p>
+
+                        @* Validacion: Solo Admin puede editar o eliminar *@
+                        @if (Context.Session.GetString("Rol") == "Administrador")
+                        {
+                            <a href="/Producto/Edit/@item.Id" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="/Producto/Delete/@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                            <hr />
+                        }
+
+                        @if (item.Stock > 0)
+                        {
+                            <form asp-action="AgregarCarrito" method="post">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <input type="number" name="cantidad" value="1" min="1" max="@item.Stock" class="form-control mb-2" />
+                                <button class="btn btn-primary w-100" type="submit">Agregar al carrito</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning text-center">Producto agotado</div>
+                            <button class="btn btn-secondary w-100" disabled>Sin stock</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

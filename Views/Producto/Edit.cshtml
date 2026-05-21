@@ -1,0 +1,68 @@
+﻿@model TiendavirtualArepasSafaera.Models.Producto
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-info text-white text-center py-3 rounded-top-4">
+                    <h3 class="mb-0">Editar Producto</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Nombre</label>
+                                <input asp-for="Nombre" class="form-control rounded-pill" />
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-bold">Precio</label>
+                                <input asp-for="Precio" class="form-control rounded-pill" />
+                                <span asp-validation-for="Precio" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-bold">Stock</label>
+                                <input asp-for="Stock" class="form-control rounded-pill" />
+                                <span asp-validation-for="Stock" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Categoría</label>
+                            <select asp-for="CategoriaId" class="form-select rounded-pill">
+                                <option value="">Seleccione una categoría</option>
+                                @foreach (var cat in ViewBag.Categorias)
+                                {
+                                    <option value="@cat.Id" selected="@(cat.Id == Model.CategoriaId)">@cat.Nombre</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CategoriaId" class="text-danger"></span>
+                        </div>
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-4 text-center">
+                                <label class="form-label d-block fw-bold">Imagen actual</label>
+                                <img src="@Model.ImagenUrl" class="img-fluid rounded border shadow-sm" style="max-height: 120px;" />
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">Nueva imagen (opcional)</label>
+                                <input type="file" name="imagen" class="form-control rounded-pill" />
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end border-top pt-3">
+                            <a href="/Producto" class="btn btn-outline-secondary px-4 rounded-pill">Volver</a>
+                            <button class="btn btn-info text-white px-5 rounded-pill shadow-sm" type="submit">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

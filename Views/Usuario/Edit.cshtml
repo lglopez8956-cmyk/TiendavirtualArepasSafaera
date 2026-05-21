@@ -1,0 +1,57 @@
+﻿@model TiendavirtualArepasSafaera.Models.Usuario
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-success text-white text-center py-3 rounded-top-4">
+                    <h3 class="mb-0 fw-bold">Modificar Usuario</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label fw-bold">Nombre Completo</label>
+                            <input asp-for="Nombre" class="form-control rounded-pill" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Correo" class="form-label fw-bold">Correo Electrónico</label>
+                                <input asp-for="Correo" class="form-control rounded-pill" type="email" />
+                                <span asp-validation-for="Correo" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Celular" class="form-label fw-bold">Número de Celular</label>
+                                <input asp-for="Celular" class="form-control rounded-pill" />
+                                <span asp-validation-for="Celular" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Rol" class="form-label fw-bold">Rol asignado</label>
+                            <select asp-for="Rol" class="form-select rounded-pill">
+                                <option value="Administrador">Administrador</option>
+                                
+                                
+                                <option value="Cliente">Cliente</option>
+                            </select>
+                            <span asp-validation-for="Rol" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end border-top pt-3">
+                            <a href="/Usuario" class="btn btn-outline-secondary px-4 rounded-pill">Cancelar</a>
+                            <button class="btn btn-success px-5 rounded-pill shadow-sm fw-bold" type="submit">Actualizar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

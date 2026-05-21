@@ -1,0 +1,70 @@
+﻿@model List<(TiendavirtualArepasSafaera.Models.Producto producto, int cantidad)>
+@using Microsoft.AspNetCore.Http
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">
+            <span class="me-2">🛒</span> Carrito de Compras
+        </h2>
+
+        <div class="d-flex gap-2">
+            <a href="/Producto" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Seguir comprando</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 p-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Producto</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-end">Precio</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-3 fw-bold">@item.producto.Nombre</td>
+                            <td class="text-center">@item.cantidad</td>
+                            <td class="text-end">$ @item.producto.Precio.ToString("N0")</td>
+                            <td class="text-end fw-bold text-primary">$ @((item.producto.Precio * item.cantidad).ToString("N0"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+            <div class="text-end">
+                <h5 class="text-muted">Total a pagar</h5>
+                <h2 class="fw-bold text-dark mb-3">$ @Model.Sum(x => x.producto.Precio * x.cantidad).ToString("N0")</h2>
+                <button type="button" id="btnFinalizar" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
+                    Finalizar Compra
+                </button>
+
+                <div id="mensajeCompra" style="margin-top: 15px; display: none;" class="alert alert-success">
+                    ¡Compra realizada con éxito!
+                </div>
+
+                <script>
+                    document.getElementById('btnFinalizar').addEventListener('click', function() {
+                        // Enviar la petición al controlador sin recargar
+                        fetch('/Producto/Comprar', { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                // Mostrar el mensaje en el div oculto
+                                document.getElementById('mensajeCompra').style.display = 'block';
+                                // Ocultar el botón para evitar compras dobles
+                                document.getElementById('btnFinalizar').style.display = 'none';
+                            }
+                        });
+                    });
+                </script>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

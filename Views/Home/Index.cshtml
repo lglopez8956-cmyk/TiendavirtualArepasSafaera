@@ -1,0 +1,105 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Inicio";
+    var esAdmin = Context.Session.GetString("Rol") == "Administrador";
+}
+
+<div class="container mt-5 py-4">
+    <div class="text-center mb-5">
+        <h1 class="welcome-title">¡Bienvenido, @Context.Session.GetString("Usuario")!</h1>
+        <p class="welcome-subtitle">
+            @(esAdmin ? "Gestión y control de tu punto de venta." : "¡Qué bueno verte! Elige una categoría y descubre nuestras delicias.")
+        </p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+        @* Tarjeta Productos *@
+        <div class="col-12 col-md-4 col-lg-3">
+            <a href="/Producto" class="text-decoration-none">
+                <div class="card h-100 shadow-sm text-center p-4 menu-card">
+                    <div class="icon-box mx-auto mb-3"><i class="bi bi-box-seam fs-2"></i></div>
+                    <h5 class="fw-bold text-light mb-2">Productos</h5>
+                    <p class="text-white-50 small m-0">@(esAdmin ? "Administra el inventario." : "Mira nuestros productos.")</p>
+                </div>
+            </a>
+        </div>
+
+        @* Tarjetas de Admin *@
+        @if (esAdmin)
+        {
+            <div class="col-12 col-md-4 col-lg-3">
+                <a href="/Producto/HistorialCompras" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm text-center p-4 menu-card">
+                        <div class="icon-box mx-auto mb-3"><i class="bi bi-file-earmark-text fs-2"></i></div>
+                        <h5 class="fw-bold text-light mb-2">Historial</h5>
+                        <p class="text-white-50 small m-0">Registro de ventas y compras.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                <a href="/Usuario" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm text-center p-4 menu-card">
+                        <div class="icon-box mx-auto mb-3"><i class="bi bi-people fs-2"></i></div>
+                        <h5 class="fw-bold text-light mb-2">Usuarios</h5>
+                        <p class="text-white-50 small m-0">Gestiona accesos y roles.</p>
+                    </div>
+                </a>
+            </div>
+        }
+
+        @* Tarjeta Categorías *@
+        <div class="col-12 col-md-4 col-lg-3">
+            <a href="/Categoria" class="text-decoration-none">
+                <div class="card h-100 shadow-sm text-center p-4 menu-card">
+                    <div class="icon-box mx-auto mb-3"><i class="bi bi-tags fs-2"></i></div>
+                    <h5 class="fw-bold text-light mb-2">Categorías</h5>
+                    <p class="text-white-50 small m-0">@(esAdmin ? "Organiza secciones." : "Explora nuestras categorías.")</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Título Estilo Urbano 90s */
+    .welcome-title {
+        font-family: 'Bangers', cursive;
+        font-size: 3.5rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: #fff;
+        text-shadow: 3px 3px 0px #a0a0a0, 5px 5px 0px #000;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-subtitle {
+        font-family: 'Poppins', sans-serif;
+        color: #555;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    /* Tarjetas Estilo Urbano */
+    .menu-card {
+        transition: all 0.3s ease;
+        border-radius: 15px !important;
+        background-color: #0d0d0d !important;
+        border: 2px solid #a0a0a0 !important;
+    }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            background-color: #1a1a1a !important;
+        }
+
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #a0a0a0;
+        color: #0d0d0d;
+    }
+</style>

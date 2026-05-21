@@ -1,0 +1,89 @@
+﻿@model List<TiendavirtualArepasSafaera.Models.Categoria>
+@using Microsoft.AspNetCore.Http
+
+<div class="d-flex justify-content-between align-items-center mb-5 pb-2 border-bottom">
+    <div>
+        <h2 class="fw-bold text-dark m-0">Gestión de Categorías</h2>
+        <p class="text-muted m-0">Organiza los productos y el menú de la tienda por secciones de comida</p>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a href="/Home/Index" class="btn btn-outline-secondary px-4 py-2 shadow-sm fw-bold">
+            ← Volver
+        </a>
+
+        @if (Context.Session.GetString("Rol") == "Administrador")
+        {
+            <a class="btn btn-primary px-4 py-2 shadow-sm fw-bold" href="/Categoria/Create">
+                Nueva Categoría
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm transition-card position-relative overflow-hidden">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-3" style="width: 48px; height: 48px;">
+                            <span class="fs-4 fw-bold">@item.Nombre.Substring(0, 1).ToUpper()</span>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-dark m-0 card-title-clamp">@item.Nombre</h5>
+                            @if (item.Productos != null && item.Productos.Any())
+                            {
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill small">Activa</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill small">Inactiva</span>
+                            }
+                        </div>
+                    </div>
+
+                    <p class="text-muted small mb-4 flex-grow-1 card-desc-clamp">
+                        @(string.IsNullOrEmpty(item.Descripcion) ? "Sin descripción disponible para esta categoría." : item.Descripcion)
+                    </p>
+
+                    @if (Context.Session.GetString("Rol") == "Administrador")
+                    {
+                        <div class="d-flex gap-2 pt-2 border-top">
+                            <a href="/Categoria/Edit/@item.Id" class="btn btn-warning text-white fw-bold btn-sm flex-grow-1 shadow-sm" title="Editar">Editar</a>
+                            <a href="/Categoria/Delete/@item.Id" class="btn btn-danger text-white fw-bold btn-sm flex-grow-1 shadow-sm" title="Eliminar" onclick="return confirm('¿Eliminar esta categoría? Esto podría afectar a los productos asociados.');">Eliminar</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .transition-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border-radius: 16px !important;
+    }
+
+        .transition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+        }
+
+    .card-title-clamp {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card-desc-clamp {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 4.5em;
+    }
+</style>
