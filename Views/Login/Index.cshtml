@@ -1,17 +1,13 @@
 ﻿<div class="login-page-wrapper">
-    <div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="container d-flex flex-column align-items-center justify-content-start min-vh-100 pt-3">
 
-        <div class="card p-4 shadow-lg border-0 login-card" style="width: 100%; max-width: 400px;">
+        <div class="card p-4 shadow-lg border-0 login-card mt-n5" style="width: 100%; max-width: 500px;">
 
-            <div class="text-center mb-4">
-                <div class="logo-container mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="50" height="50">
-                        <circle cx="50" cy="50" r="45" fill="#f39c12" />
-                        <text x="50%" y="55%" text-anchor="middle" fill="white" font-size="40" font-family="Arial">A</text>
-                    </svg>
-                </div>
-                <h3 class="fw-bold text-dark m-0">Arepas Safaera</h3>
-                <p class="text-muted small mt-1">Ingresa tus credenciales para acceder</p>
+            <!-- ✅ BANNER DENTRO DEL CARD -->
+            <div class="mb-4">
+                <img src="/images/banner-login.png" alt="Arepas Safaera"
+                     class="img-fluid rounded-3"
+                     style="width: 100%; object-fit: cover;" />
             </div>
 
             <form action="/Login" method="post">
@@ -19,14 +15,11 @@
                     <label class="form-label text-secondary small fw-bold">Correo</label>
                     <input name="correo" type="email" class="form-control bg-light py-2 px-3 border-0 rounded-3 text-dark" placeholder="gabriel@admin" required />
                 </div>
-
                 <div class="mb-4">
                     <label class="form-label text-secondary small fw-bold">Clave</label>
                     <input name="clave" type="password" class="form-control bg-light py-2 px-3 border-0 rounded-3 text-dark" placeholder="••••••" required />
                 </div>
-
-                <button class="btn btn-primary w-100 py-2.5 fw-bold rounded-3 shadow-sm transition-btn" type="submit">Ingresar</button>
-
+                <button class="btn w-100 py-2 fw-bold rounded-3 shadow-sm transition-btn" type="submit">Ingresar</button>
                 @if (ViewBag.Error != null)
                 {
                     <div class="alert alert-danger mt-3 py-2 text-center small rounded-3 border-0 bg-danger-subtle text-danger">
@@ -39,9 +32,8 @@
 </div>
 
 <style>
-    /* Estilos mejorados para evitar el desorden visual */
     .login-page-wrapper {
-        background-color: #f8f9fa; /* Un gris muy suave para dar profundidad */
+        background-color: #f8f9fa;
         min-height: 100vh;
         width: 100%;
         display: flex;
@@ -53,33 +45,23 @@
         background-color: #ffffff !important;
         border-radius: 20px !important;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08) !important;
-        transition: transform 0.3s ease;
-    }
-
-    .logo-container {
-        background-color: #fffcf5;
-        width: 70px;
-        height: 70px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        border: 2px solid #f39c12;
     }
 
     .form-control:focus {
-        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
+        box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3) !important;
+        border-color: #ffc107 !important;
     }
 
     .transition-btn {
-        background-color: #0d6efd;
+        background-color: #ffc107;
+        color: #000;
         border: none;
         transition: all 0.2s ease-in-out;
     }
 
         .transition-btn:hover {
-            background-color: #0b5ed7 !important;
+            background-color: #e0a800 !important;
+            color: #000 !important;
             transform: translateY(-2px);
         }
 </style>

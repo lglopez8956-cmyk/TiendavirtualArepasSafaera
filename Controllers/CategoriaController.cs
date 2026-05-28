@@ -36,23 +36,25 @@ namespace TiendavirtualArepasSafaera.Controllers
 
             return View();
         }
-
-        // CREAR CATEGORÍA (POST)
         [HttpPost]
-        public IActionResult Create(Categoria categoria)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Categoria categoria)
         {
-            // Protección al inicio del método
-            if (HttpContext.Session.GetString("Rol") != "Administrador")
-            {
-                return Unauthorized();
-            }
+            var rol = HttpContext.Session.GetString("Rol")?.Trim();
 
-            if (ModelState.IsValid)
+            
+            if (!string.Equals(rol, "Administrador", StringComparison.OrdinalIgnoreCase))
             {
-                _context.Categorias.Add(categoria);
-                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+            if (categoria != null)
+            {
+                _context.Categorias.Add(categoria);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(categoria);
         }
 
@@ -71,23 +73,30 @@ namespace TiendavirtualArepasSafaera.Controllers
             return View(categoria);
         }
 
-        // EDITAR CATEGORÍA (POST)
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(Categoria categoria)
         {
-            // Protección al inicio del método
             if (HttpContext.Session.GetString("Rol") != "Administrador")
             {
-                return RedirectToAction("Index", "Login"); 
+                return RedirectToAction("Index", "Login");
             }
 
-            if (ModelState.IsValid)
+          
+            if (!ModelState.IsValid)
             {
-                _context.Categorias.Update(categoria);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                var errores = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => $"{x.Key}: {string.Join(", ", x.Value.Errors.Select(e => e.ErrorMessage))}");
+
+                TempData["Error"] = string.Join(" | ", errores);
+                return View(categoria);
             }
-            return View(categoria);
+
+            _context.Categorias.Update(categoria);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // 4. ELIMINAR CATEGORÍA

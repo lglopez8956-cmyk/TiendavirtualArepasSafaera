@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TiendavirtualArepasSafaera.Data;
 using TiendavirtualArepasSafaera.Models;
-using TiendavirtualArepasSafaera.Helpers; 
+using TiendavirtualArepasSafaera.Helpers;
 using System.Linq;
 
 namespace TiendavirtualArepasSafaera.Controllers
@@ -27,24 +27,23 @@ namespace TiendavirtualArepasSafaera.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public IActionResult Create(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
+                // ✅ Hashear la contraseña antes de guardar
+                usuario.Clave = HashHelper.ObtenerHash(usuario.Clave);
+
                 _context.Usuarios.Add(usuario);
                 _context.SaveChanges();
 
-                // Si hay una sesión activa, el administrador está gestionando usuarios
                 if (HttpContext.Session.GetString("Usuario") != null)
                 {
                     return RedirectToAction("Index", "Usuario");
                 }
                 else
                 {
-                    // CORRECCIÓN: Apuntamos al controlador "Login" y la acción "Index"
-                    // Esto evita el error 404 que tenías antes
                     return RedirectToAction("Index", "Login");
                 }
             }
@@ -69,9 +68,10 @@ namespace TiendavirtualArepasSafaera.Controllers
             // 1. Buscamos el usuario original en la base de datos
             var usuarioBD = _context.Usuarios.Find(usuario.Id);
 
-            if (usuarioBD == null)
+            if (!string.IsNullOrEmpty(usuario.Clave))
             {
-                return NotFound();
+                usuarioBD.Clave = HashHelper.ObtenerHash(usuario.Clave);
+
             }
 
             // 2. Actualizamos solo los campos necesarios manualmente

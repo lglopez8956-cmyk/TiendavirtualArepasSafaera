@@ -32,35 +32,48 @@ namespace TiendavirtualArepasSafaera.Controllers
             return View(productos);
         }
 
+        // CREATE Producto (GET)
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetString("Rol") != "Administrador")
+            var rol = HttpContext.Session.GetString("Rol")?.Trim();
+            if (!string.Equals(rol, "Administrador", StringComparison.OrdinalIgnoreCase))
             {
-                return Forbid();
+                return RedirectToAction("Index", "Producto");
             }
+
+            // ✅ ESTO ES LO QUE FALTA - carga las categorías para el dropdown
             ViewBag.Categorias = _context.Categorias.ToList();
+
             return View();
         }
-
+     
         [HttpPost]
-        public IActionResult Create(Producto producto, IFormFile imagen)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Producto producto, IFormFile imagen)
         {
+            var rol = HttpContext.Session.GetString("Rol")?.Trim();
+            if (!string.Equals(rol, "Administrador", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToAction("Index");
+            }
+
+            // Manejo de imagen
             if (imagen != null)
             {
-                var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imagen.FileName);
+                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                if (!Directory.Exists(carpeta)) Directory.CreateDirectory(carpeta);
+                var ruta = Path.Combine(carpeta, imagen.FileName);
                 using (var stream = new FileStream(ruta, FileMode.Create))
                 {
-                    imagen.CopyTo(stream);
+                    await imagen.CopyToAsync(stream);
                 }
                 producto.ImagenUrl = "/images/" + imagen.FileName;
             }
 
             _context.Productos.Add(producto);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
-
         public IActionResult Edit(int id)
         {
             if (HttpContext.Session.GetString("Rol") != "Administrador")

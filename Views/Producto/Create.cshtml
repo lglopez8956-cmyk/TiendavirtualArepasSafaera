@@ -1,5 +1,4 @@
 ﻿@model TiendavirtualArepasSafaera.Models.Producto
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -8,9 +7,8 @@
                     <h3 class="mb-0">Crear Nuevo Producto</h3>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <form asp-action="Create" asp-controller="Producto" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Nombre" class="form-label fw-bold">Nombre</label>
@@ -28,7 +26,6 @@
                                 <span asp-validation-for="Stock" class="text-danger"></span>
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label asp-for="CategoriaId" class="form-label fw-bold">Categoría</label>
                             <select asp-for="CategoriaId" class="form-select rounded-pill">
@@ -41,11 +38,12 @@
                             <span asp-validation-for="CategoriaId" class="text-danger"></span>
                         </div>
 
+                        <!-- ✅ AGREGADO - campo Descripcion -->
+                      
                         <div class="mb-4">
                             <label class="form-label fw-bold">Imagen del Producto</label>
-                            <input type="file" name="imagen" class="form-control rounded-pill" />
+                            <input type="file" name="imagen" class="form-control rounded-pill" accept="image/*" />
                         </div>
-
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="/Producto" class="btn btn-secondary px-4 rounded-pill">Volver</a>
                             <button type="submit" class="btn btn-success px-4 rounded-pill">Guardar Producto</button>
@@ -56,7 +54,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

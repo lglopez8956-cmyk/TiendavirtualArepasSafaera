@@ -1,16 +1,15 @@
 ﻿@model List<TiendavirtualArepasSafaera.Models.Producto>
 @using Microsoft.AspNetCore.Http
-
 <div class="container mt-4">
-    
-        <div class="mb-3">
+
+    <div class="mb-3">
         <a class="btn btn-outline-secondary" href="/Home/Index">← Volver al Inicio</a>
-        </div>
+    </div>
+
     @if (TempData["Mensaje"] != null)
     {
         <div class="alert alert-success">@TempData["Mensaje"]</div>
     }
-
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger">@TempData["Error"]</div>
@@ -18,19 +17,28 @@
 
     <h2 class="mb-4 text-center">Productos</h2>
 
-    <div class="mb-3">
-        @* Validacion: Solo Admin puede crear nuevos productos *@
+    <!-- ✅ BOTONES MEJORADOS -->
+    <div class="mb-3 d-flex gap-2">
         @if (Context.Session.GetString("Rol") == "Administrador")
         {
-            <a class="btn btn-success me-2" href="/Producto/Create">+ Nuevo Producto</a>
+            <a class="btn btn-warning fw-bold rounded-pill px-4" href="/Producto/Create">+ Nuevo Producto</a>
         }
-        <a class="btn btn-primary" href="/Producto/Carrito">Ver Carrito</a>
+        <a class="btn btn-dark fw-bold rounded-pill px-4 border border-warning text-warning" href="/Producto/Carrito">🛒 Ver Carrito</a>
     </div>
 
-    <div class="row">
+    <!-- ✅ FILTROS MEJORADOS -->
+    <div class="mb-4 p-3 rounded-4 bg-white border d-flex flex-wrap gap-2 filtros-categoria">
+        <button class="btn btn-warning btn-sm rounded-pill px-4 fw-bold" onclick="filtrarCategoria('todos', this)">🍽️ Todos</button>
+        @foreach (var cat in Model.Where(p => p.Categoria != null).Select(p => p.Categoria).DistinctBy(c => c.Id))
+        {
+            <button class="btn btn-outline-dark btn-sm rounded-pill px-4 fw-bold text-dark" onclick="filtrarCategoria('@cat.Id', this)">@cat.Nombre</button>
+        }
+    </div>
+
+    <div class="row" id="lista-productos">
         @foreach (var item in Model)
         {
-            <div class="col-md-3 mb-4">
+            <div class="col-md-3 mb-4 producto-card" data-categoria="@item.CategoriaId">
                 <div class="card h-100 shadow">
                     <img src="@item.ImagenUrl" class="card-img-top" style="height:200px; object-fit:cover;" />
                     <div class="card-body">
@@ -40,15 +48,12 @@
                             Stock: @item.Stock <br />
                             Categoría: @item.Categoria?.Nombre
                         </p>
-
-                        @* Validacion: Solo Admin puede editar o eliminar *@
                         @if (Context.Session.GetString("Rol") == "Administrador")
                         {
                             <a href="/Producto/Edit/@item.Id" class="btn btn-warning btn-sm">Editar</a>
                             <a href="/Producto/Delete/@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
                             <hr />
                         }
-
                         @if (item.Stock > 0)
                         {
                             <form asp-action="AgregarCarrito" method="post">
@@ -68,3 +73,29 @@
         }
     </div>
 </div>
+<style>
+    .filtros-categoria .btn-outline-dark:hover {
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+        color: #000 !important;
+    }
+</style>
+
+<script>
+    function filtrarCategoria(categoriaId, boton) {
+        document.querySelectorAll('.filtros-categoria .btn').forEach(b => {
+            b.classList.remove('btn-warning', 'text-dark');
+            b.classList.add('btn-outline-dark', 'text-dark');
+        });
+        boton.classList.remove('btn-outline-dark');
+        boton.classList.add('btn-warning', 'text-dark');
+
+        document.querySelectorAll('.producto-card').forEach(card => {
+            if (categoriaId === 'todos' || card.dataset.categoria === categoriaId) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
